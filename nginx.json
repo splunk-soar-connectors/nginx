@@ -14,7 +14,7 @@
     "utctime_updated": "2019-07-12T12:02:41.842567Z",
     "package_name": "phantom_nginx",
     "main_module": "nginx_connector.pyc",
-    "min_phantom_version": "4.5.15425",
+    "min_phantom_version": "4.2.7532",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "base_url": {
