@@ -9,7 +9,7 @@
     "product_name": "NGINX",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) Splunk, 2019",
+    "license": "Copyright (c) 2019 Splunk",
     "app_version": "1.0.0",
     "utctime_updated": "2019-07-12T12:02:41.842567Z",
     "package_name": "phantom_nginx",
