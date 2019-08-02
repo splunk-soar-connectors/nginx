@@ -10,8 +10,8 @@
     "product_version_regex": ".*",
     "publisher": "Splunk",
     "license": "Copyright (c) 2019 Splunk Inc.",
-    "app_version": "1.0.0",
-    "utctime_updated": "2019-07-12T12:02:41.842567Z",
+    "app_version": "1.0.1",
+    "utctime_updated": "2019-08-02T22:16:13.000000Z",
     "package_name": "phantom_nginx",
     "main_module": "nginx_connector.pyc",
     "min_phantom_version": "4.2.7532",
@@ -115,14 +115,12 @@
                 {
                     "data_path": "action_result.summary",
                     "data_type": "string",
-                    "example_values": [
-                    ]
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.data",
                     "data_type": "string",
-                    "example_values": [
-                    ]
+                    "example_values": []
                 },
                 {
                     "data_path": "action_result.parameter.url",
