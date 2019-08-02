@@ -40,9 +40,6 @@ class NginxConnector(BaseConnector):
         # get the asset config
         config = self.get_config()
 
-        base_url = config['base_url']
-        self._base_url = '{0}api/4'.format(base_url + ('' if base_url.endswith('/') else '/'))
-
         self._auth = (config['username'], config['password'])
 
         return phantom.APP_SUCCESS
@@ -155,10 +152,9 @@ class NginxConnector(BaseConnector):
 
         return self._process_response(r, action_result)
 
-    def _handle_test_connectivity(self, param):
+    def _handle_test_connectivity(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
         self.save_progress("Querying info about NGINX instance to test connectivity")
 
@@ -173,10 +169,9 @@ class NginxConnector(BaseConnector):
         self.save_progress("Test Connectivity Passed")
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _handle_remove_server(self, param):
+    def _handle_remove_server(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
         upstream_name = param['upstream_name']
         server_id = param['server_id']
@@ -189,10 +184,9 @@ class NginxConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully removed server")
 
-    def _handle_add_server(self, param):
+    def _handle_add_server(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
         upstream_name = param['upstream_name']
         server_ip = param['ip']
@@ -226,24 +220,21 @@ class NginxConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS, "Server successfully updated")
 
-    def _handle_disable_server(self, param):
+    def _handle_disable_server(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
         return self._patch_server(action_result, param, True)
 
-    def _handle_enable_server(self, param):
+    def _handle_enable_server(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
         return self._patch_server(action_result, param, False)
 
-    def _handle_describe_server(self, param):
+    def _handle_describe_server(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
         upstream_name = param['upstream_name']
         server_id = param['server_id']
@@ -259,10 +250,9 @@ class NginxConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully retrieved server info")
 
-    def _handle_list_servers(self, param):
+    def _handle_list_servers(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
         upstream_name = param['upstream_name']
 
@@ -281,10 +271,9 @@ class NginxConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _handle_list_upstreams(self, param):
+    def _handle_list_upstreams(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
         # make rest call
         ret_val, response = self._make_rest_call('/http/upstreams', action_result, params=None, headers=None)
@@ -302,6 +291,17 @@ class NginxConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
+    def _set_base_url(self, param):
+
+        base_url = param.get('url', self.get_config().get('base_url'))
+
+        if not base_url:
+            return phantom.APP_ERROR
+
+        self._base_url = '{0}api/4'.format(base_url + ('' if base_url.endswith('/') else '/'))
+
+        return phantom.APP_SUCCESS
+
     def handle_action(self, param):
 
         ret_val = phantom.APP_SUCCESS
@@ -309,24 +309,28 @@ class NginxConnector(BaseConnector):
         # Get the action that we are supposed to execute for this App Run
         action_id = self.get_action_identifier()
 
-        self.debug_print("action_id", self.get_action_identifier())
+        self.debug_print("action_id", action_id)
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        if phantom.is_fail(self._set_base_url(param)):
+            return action_result.set_status(phantom.APP_ERROR, "Please set either a base_url in the asset configuration or a url in the action parameters")
 
         if action_id == 'test_connectivity':
-            ret_val = self._handle_test_connectivity(param)
+            ret_val = self._handle_test_connectivity(param, action_result)
         elif action_id == 'remove_server':
-            ret_val = self._handle_remove_server(param)
+            ret_val = self._handle_remove_server(param, action_result)
         elif action_id == 'add_server':
-            ret_val = self._handle_add_server(param)
+            ret_val = self._handle_add_server(param, action_result)
         elif action_id == 'disable_server':
-            ret_val = self._handle_disable_server(param)
+            ret_val = self._handle_disable_server(param, action_result)
         elif action_id == 'enable_server':
-            ret_val = self._handle_enable_server(param)
+            ret_val = self._handle_enable_server(param, action_result)
         elif action_id == 'describe_server':
-            ret_val = self._handle_describe_server(param)
+            ret_val = self._handle_describe_server(param, action_result)
         elif action_id == 'list_servers':
-            ret_val = self._handle_list_servers(param)
+            ret_val = self._handle_list_servers(param, action_result)
         elif action_id == 'list_upstreams':
-            ret_val = self._handle_list_upstreams(param)
+            ret_val = self._handle_list_upstreams(param, action_result)
 
         return ret_val
 
