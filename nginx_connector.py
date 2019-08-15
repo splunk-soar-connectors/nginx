@@ -71,7 +71,7 @@ class NginxConnector(BaseConnector):
         except:
             error_text = "Cannot parse error details"
 
-        message = "Status Code: {0}. Data from server:\n{1}\n".format(status_code,
+        message = u"Status Code: {0}. Data from server:\n{1}\n".format(status_code,
                 error_text)
 
         message = message.replace(u'{', '{{').replace(u'}', '}}')
@@ -90,9 +90,16 @@ class NginxConnector(BaseConnector):
         if 200 <= r.status_code < 399:
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
+        resp_json = r.json()
+
+        if 'error' in resp_json:
+            error = resp_json['error'].get('text', 'unknown error')
+        else:
+            error = r.text.replace(u'{', '{{').replace(u'}', '}}')
+
         # You should process the error returned in the json
-        message = "Error from server. Status Code: {0} Data from server: {1}".format(
-                r.status_code, r.text.replace(u'{', '{{').replace(u'}', '}}'))
+        message = "Error from server. Status Code: {0} Message from server: {1}".format(
+                r.status_code, error)
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
