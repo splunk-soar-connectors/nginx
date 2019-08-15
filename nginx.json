@@ -288,6 +288,9 @@
                     "data_type": "numeric",
                     "column_name": "New Server ID",
                     "column_order": 0,
+                    "contains": [
+                        "nginx server id"
+                    ],
                     "example_values": [
                         7
                     ]
@@ -302,6 +305,9 @@
                 {
                     "data_path": "action_result.summary.server_id",
                     "data_type": "string",
+                    "contains": [
+                        "nginx server id"
+                    ],
                     "example_values": [
                         7
                     ]
