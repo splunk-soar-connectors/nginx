@@ -48,7 +48,6 @@
             "action": "test connectivity",
             "identifier": "test_connectivity",
             "description": "Validate the asset configuration for connectivity using supplied configuration",
-            "verbose": "",
             "type": "test",
             "read_only": true,
             "parameters": {},
@@ -100,7 +99,8 @@
                     "column_name": "Status",
                     "column_order": 0,
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -115,12 +115,13 @@
                 {
                     "data_path": "action_result.summary",
                     "data_type": "string",
-                    "example_values": []
+                    "example_values": [
+                        ""
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
-                    "data_type": "string",
-                    "example_values": []
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.parameter.url",
@@ -215,7 +216,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -304,7 +306,7 @@
                 },
                 {
                     "data_path": "action_result.summary.server_id",
-                    "data_type": "string",
+                    "data_type": "numeric",
                     "contains": [
                         "nginx server id"
                     ],
@@ -366,7 +368,7 @@
             "action": "disable server",
             "identifier": "disable_server",
             "description": "Disable a server",
-            "type": "generic",
+            "type": "contain",
             "read_only": false,
             "undo": "enable server",
             "parameters": {
@@ -444,7 +446,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Server successfully disabled"
+                        "Server successfully updated"
                     ]
                 },
                 {
@@ -544,7 +546,7 @@
                     "column_name": "ID",
                     "column_order": 0,
                     "contains": [
-                        "nginx upstream name"
+                        "nginx server id"
                     ],
                     "example_values": [
                         0
@@ -560,7 +562,7 @@
             "action": "enable server",
             "identifier": "enable_server",
             "description": "Enable a server",
-            "type": "generic",
+            "type": "correct",
             "read_only": false,
             "undo": "disable server",
             "parameters": {
@@ -630,14 +632,15 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Server successfully enabled"
+                        "Server successfully updated"
                     ]
                 },
                 {
@@ -733,7 +736,7 @@
                 {
                     "data_path": "action_result.data.*.id",
                     "data_type": "numeric",
-                    "column_name": "ID",
+                    "column_name": "Server ID",
                     "column_order": 0,
                     "contains": [
                         "nginx server id"
@@ -821,7 +824,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -924,7 +928,7 @@
                 {
                     "data_path": "action_result.data.*.id",
                     "data_type": "numeric",
-                    "column_name": "ID",
+                    "column_name": "Server ID",
                     "column_order": 0,
                     "contains": [
                         "nginx server id"
@@ -992,7 +996,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -1033,7 +1038,7 @@
                 {
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
-                    "column_name": "Name",
+                    "column_name": "Server Name",
                     "column_order": 1,
                     "example_values": [
                         "10.1.17.76"
@@ -1144,6 +1149,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.downstart",
+                    "data_type": "string",
+                    "example_values": [
+                        "2019-08-01T21:55:56.905Z"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.backup",
                     "data_type": "boolean",
                     "example_values": [
@@ -1154,7 +1166,7 @@
                 {
                     "data_path": "action_result.data.*.id",
                     "data_type": "numeric",
-                    "column_name": "ID",
+                    "column_name": "Server ID",
                     "column_order": 0,
                     "example_values": [
                         0
@@ -1258,7 +1270,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
