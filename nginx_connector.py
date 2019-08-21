@@ -169,7 +169,7 @@ class NginxConnector(BaseConnector):
 
         # Check for failure
         if (phantom.is_fail(ret_val)):
-            self.save_progress("Test Connectivity Failed.")
+            self.save_progress("Test Connectivity Failed")
             return action_result.get_status()
 
         # Return success
@@ -210,7 +210,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['server_id'] = response['id']
 
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return action_result.set_status(phantom.APP_SUCCESS, "Successfully added server")
 
     def _patch_server(self, action_result, param, down):
 
