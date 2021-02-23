@@ -1,6 +1,6 @@
 # File: nginx_connector.py
 #
-# Copyright (c) 2019 Splunk Inc.
+# Copyright (c) 2019-2021 Splunk Inc.
 #
 # SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
 # without a valid written license from Splunk Inc. is PROHIBITED.
@@ -64,6 +64,9 @@ class NginxConnector(BaseConnector):
 
         try:
             soup = BeautifulSoup(response.text, "html.parser")
+            # Remove the script, style, footer and navigation part from the HTML message
+            for element in soup(["script", "style", "footer", "nav"]):
+                element.extract()
             error_text = soup.text
             split_lines = error_text.split('\n')
             split_lines = [x.strip() for x in split_lines if x.strip()]
@@ -71,10 +74,10 @@ class NginxConnector(BaseConnector):
         except:
             error_text = "Cannot parse error details"
 
-        message = u"Status Code: {0}. Data from server:\n{1}\n".format(status_code,
+        message = "Status Code: {0}. Data from server:\n{1}\n".format(status_code,
                 error_text)
 
-        message = message.replace(u'{', '{{').replace(u'}', '}}')
+        message = message.replace('{', '{{').replace('}', '}}')
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -95,7 +98,7 @@ class NginxConnector(BaseConnector):
         if 'error' in resp_json:
             error = resp_json['error'].get('text', 'unknown error')
         else:
-            error = r.text.replace(u'{', '{{').replace(u'}', '}}')
+            error = r.text.replace('{', '{{').replace('}', '}}')
 
         # You should process the error returned in the json
         message = "Error from server. Status Code: {0} Message from server: {1}".format(
@@ -289,7 +292,7 @@ class NginxConnector(BaseConnector):
             return action_result.get_status()
 
         # Refactor data and add the response into the data section
-        for k, v in response.items():
+        for k, v in list(response.items()):
             v.pop('peers')
             action_result.add_data(v)
 
@@ -384,11 +387,11 @@ if __name__ == '__main__':
             headers['Cookie'] = 'csrftoken=' + csrftoken
             headers['Referer'] = login_url
 
-            print ("Logging into Platform to get the session id")
+            print("Logging into Platform to get the session id")
             r2 = requests.post(login_url, verify=False, data=data, headers=headers)
             session_id = r2.cookies['sessionid']
         except Exception as e:
-            print ("Unable to get session id from the platform. Error: " + str(e))
+            print("Unable to get session id from the platform. Error: " + str(e))
             exit(1)
 
     with open(args.input_test_json) as f:
@@ -404,6 +407,6 @@ if __name__ == '__main__':
             connector._set_csrf_info(csrftoken, headers['Referer'])
 
         ret_val = connector._handle_action(json.dumps(in_json), None)
-        print (json.dumps(json.loads(ret_val), indent=4))
+        print(json.dumps(json.loads(ret_val), indent=4))
 
     exit(0)
