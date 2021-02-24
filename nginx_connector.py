@@ -374,7 +374,7 @@ if __name__ == '__main__':
         try:
             login_url = NginxConnector._get_phantom_base_url() + '/login'
 
-            print ("Accessing the Login page")
+            print("Accessing the Login page")
             r = requests.get(login_url, verify=False)
             csrftoken = r.cookies['csrftoken']
 
