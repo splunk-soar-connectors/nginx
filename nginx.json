@@ -9,24 +9,26 @@
     "product_name": "NGINX",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) 2019 Splunk Inc.",
-    "app_version": "1.0.6",
+    "license": "Copyright (c) 2019-2021 Splunk Inc.",
+    "app_version": "2.0.0",
     "utctime_updated": "2020-11-23T08:12:06.000000Z",
     "package_name": "phantom_nginx",
-    "main_module": "nginx_connector.pyc",
-    "min_phantom_version": "4.2.7532",
+    "main_module": "nginx_connector.py",
+    "min_phantom_version": "4.9.39220",
+    "latest_tested_versions": [
+        "NGINX On-Prem - v1.15.10"
+    ],
     "app_wizard_version": "1.0.0",
+    "python_version": "3",
     "configuration": {
         "base_url": {
             "description": "Base URL of NGINX Instance (Required for test connectivity)",
             "data_type": "string",
-            "required": false,
             "order": 0
         },
         "verify_server_cert": {
             "description": "Verify server certificate",
             "data_type": "boolean",
-            "required": false,
             "default": false,
             "order": 1
         },
@@ -64,7 +66,6 @@
                 "url": {
                     "description": "URL of NGINX instance",
                     "data_type": "string",
-                    "required": false,
                     "primary": true,
                     "contains": [
                         "url"
@@ -139,10 +140,7 @@
                 },
                 {
                     "data_path": "action_result.summary",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -183,7 +181,6 @@
                 "url": {
                     "description": "URL of NGINX instance",
                     "data_type": "string",
-                    "required": false,
                     "primary": true,
                     "contains": [
                         "url"
@@ -301,10 +298,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.route",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.server",
@@ -375,7 +369,6 @@
                 "url": {
                     "description": "URL of NGINX instance",
                     "data_type": "string",
-                    "required": false,
                     "primary": true,
                     "contains": [
                         "url"
@@ -495,10 +488,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.route",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.server",
@@ -525,10 +515,7 @@
                 },
                 {
                     "data_path": "action_result.summary",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -569,7 +556,6 @@
                 "url": {
                     "description": "URL of NGINX instance",
                     "data_type": "string",
-                    "required": false,
                     "primary": true,
                     "contains": [
                         "url"
@@ -689,10 +675,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.route",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.server",
@@ -719,10 +702,7 @@
                 },
                 {
                     "data_path": "action_result.summary",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -761,7 +741,6 @@
                 "url": {
                     "description": "URL of NGINX instance",
                     "data_type": "string",
-                    "required": false,
                     "primary": true,
                     "contains": [
                         "url"
@@ -881,10 +860,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.route",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.server",
@@ -911,17 +887,11 @@
                 },
                 {
                     "data_path": "action_result.summary",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -953,7 +923,6 @@
                 "url": {
                     "description": "URL of NGINX instance",
                     "data_type": "string",
-                    "required": false,
                     "primary": true,
                     "contains": [
                         "url"
@@ -1247,7 +1216,6 @@
                 "url": {
                     "description": "URL of NGINX instance",
                     "data_type": "string",
-                    "required": false,
                     "primary": true,
                     "contains": [
                         "url"
