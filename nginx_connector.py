@@ -196,7 +196,8 @@ class NginxConnector(BaseConnector):
         server_id = param['server_id']
 
         # make rest call
-        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id), action_result, method='delete')
+        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id),
+            action_result, method='delete')
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
