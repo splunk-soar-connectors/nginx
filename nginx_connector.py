@@ -15,15 +15,15 @@
 #
 #
 # Phantom App imports
-import phantom.app as phantom
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
+import json
 
+import phantom.app as phantom
 # Usage of the consts file is recommended
 # from nginx_consts import *
 import requests
-import json
 from bs4 import BeautifulSoup
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
 
 
 class RetVal(tuple):
@@ -360,8 +360,9 @@ class NginxConnector(BaseConnector):
 
 if __name__ == '__main__':
 
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
