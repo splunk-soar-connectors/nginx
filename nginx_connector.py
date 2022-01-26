@@ -197,7 +197,7 @@ class NginxConnector(BaseConnector):
 
         # make rest call
         ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id),
-            action_result, method='delete')
+                                                 action_result, method='delete')
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -212,7 +212,8 @@ class NginxConnector(BaseConnector):
         server_ip = param['ip']
 
         # make rest call
-        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers'.format(upstream_name), action_result, method='post', json={'server': server_ip})
+        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers'.format(upstream_name),
+                                                 action_result, method='post', json={'server': server_ip})
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -231,7 +232,8 @@ class NginxConnector(BaseConnector):
         server_id = param['server_id']
 
         # make rest call
-        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id), action_result, method='patch', json={'down': down})
+        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id),
+                                                 action_result, method='patch', json={'down': down})
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -333,7 +335,8 @@ class NginxConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
         if phantom.is_fail(self._set_base_url(param)):
-            return action_result.set_status(phantom.APP_ERROR, "Please set either a base_url in the asset configuration or a url in the action parameters")
+            error_message = "Please set either a base_url in the asset configuration or a url in the action parameters"
+            return action_result.set_status(phantom.APP_ERROR, error_message)
 
         if action_id == 'test_connectivity':
             ret_val = self._handle_test_connectivity(param, action_result)
