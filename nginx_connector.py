@@ -205,6 +205,7 @@ class NginxConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully removed server")
 
     def _handle_add_server(self, param, action_result):
@@ -227,6 +228,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['server_id'] = response['id']
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully added server")
 
     def _patch_server(self, action_result, param, down):
@@ -249,12 +251,14 @@ class NginxConnector(BaseConnector):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
+        self.save_progress("")
         return self._patch_server(action_result, param, True)
 
     def _handle_enable_server(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
+        self.save_progress("")
         return self._patch_server(action_result, param, False)
 
     def _handle_describe_server(self, param, action_result):
@@ -273,6 +277,7 @@ class NginxConnector(BaseConnector):
         # Add the response into the data section
         action_result.add_data(response)
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully retrieved server info")
 
     def _handle_list_servers(self, param, action_result):
@@ -294,6 +299,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['num_servers'] = len(action_result.get_data())
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_upstreams(self, param, action_result):
@@ -314,6 +320,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['num_upstreams'] = len(response)
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _set_base_url(self, param):
