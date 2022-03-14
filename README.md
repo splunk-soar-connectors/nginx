@@ -2,11 +2,11 @@
 # NGINX
 
 Publisher: Splunk  
-Connector Version: 2\.0\.2  
+Connector Version: 2\.0\.4  
 Product Vendor: F5  
 Product Name: NGINX  
 Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 4\.9\.39220  
+Minimum Product Version: 5\.1\.0  
 
 This app integrates with an NGINX instance to manage upstreams and servers
 
