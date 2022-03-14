@@ -402,6 +402,7 @@ if __name__ == '__main__':
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=verify, timeout=DEFAULT_REQUEST_TIMEOUT)
+
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
