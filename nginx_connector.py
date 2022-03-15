@@ -1,20 +1,32 @@
 # File: nginx_connector.py
 #
-# Copyright (c) 2019-2021 Splunk Inc.
+# Copyright (c) 2019-2022 Splunk Inc.
 #
-# SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
-# without a valid written license from Splunk Inc. is PROHIBITED.
-
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
+#
 # Phantom App imports
-import phantom.app as phantom
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
+import json
+import sys
 
+import phantom.app as phantom
 # Usage of the consts file is recommended
 # from nginx_consts import *
 import requests
-import json
 from bs4 import BeautifulSoup
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
+
+DEFAULT_REQUEST_TIMEOUT = 30  # in seconds
 
 
 class RetVal(tuple):
@@ -187,11 +199,13 @@ class NginxConnector(BaseConnector):
         server_id = param['server_id']
 
         # make rest call
-        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id), action_result, method='delete')
+        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id),
+                                                 action_result, method='delete')
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully removed server")
 
     def _handle_add_server(self, param, action_result):
@@ -202,7 +216,8 @@ class NginxConnector(BaseConnector):
         server_ip = param['ip']
 
         # make rest call
-        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers'.format(upstream_name), action_result, method='post', json={'server': server_ip})
+        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers'.format(upstream_name),
+                                                 action_result, method='post', json={'server': server_ip})
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -213,6 +228,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['server_id'] = response['id']
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully added server")
 
     def _patch_server(self, action_result, param, down):
@@ -221,7 +237,8 @@ class NginxConnector(BaseConnector):
         server_id = param['server_id']
 
         # make rest call
-        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id), action_result, method='patch', json={'down': down})
+        ret_val, response = self._make_rest_call('/http/upstreams/{0}/servers/{1}'.format(upstream_name, server_id),
+                                                 action_result, method='patch', json={'down': down})
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -234,12 +251,14 @@ class NginxConnector(BaseConnector):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
+        self.save_progress("")
         return self._patch_server(action_result, param, True)
 
     def _handle_enable_server(self, param, action_result):
 
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
+        self.save_progress("")
         return self._patch_server(action_result, param, False)
 
     def _handle_describe_server(self, param, action_result):
@@ -258,6 +277,7 @@ class NginxConnector(BaseConnector):
         # Add the response into the data section
         action_result.add_data(response)
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully retrieved server info")
 
     def _handle_list_servers(self, param, action_result):
@@ -279,6 +299,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['num_servers'] = len(action_result.get_data())
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_upstreams(self, param, action_result):
@@ -299,6 +320,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['num_upstreams'] = len(response)
 
+        self.save_progress(phantom.APP_SUCCESS)
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _set_base_url(self, param):
@@ -323,7 +345,8 @@ class NginxConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
         if phantom.is_fail(self._set_base_url(param)):
-            return action_result.set_status(phantom.APP_ERROR, "Please set either a base_url in the asset configuration or a url in the action parameters")
+            error_message = "Please set either a base_url in the asset configuration or a url in the action parameters"
+            return action_result.set_status(phantom.APP_ERROR, error_message)
 
         if action_id == 'test_connectivity':
             ret_val = self._handle_test_connectivity(param, action_result)
@@ -347,8 +370,9 @@ class NginxConnector(BaseConnector):
 
 if __name__ == '__main__':
 
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
@@ -357,12 +381,14 @@ if __name__ == '__main__':
     argparser.add_argument('input_test_json', help='Input Test JSON file')
     argparser.add_argument('-u', '--username', help='username', required=False)
     argparser.add_argument('-p', '--password', help='password', required=False)
+    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
 
     username = args.username
     password = args.password
+    verify = args.verify
 
     if (username is not None and password is None):
 
@@ -375,7 +401,8 @@ if __name__ == '__main__':
             login_url = NginxConnector._get_phantom_base_url() + '/login'
 
             print("Accessing the Login page")
-            r = requests.get(login_url, verify=False)
+            r = requests.get(login_url, verify=verify, timeout=DEFAULT_REQUEST_TIMEOUT)
+
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -388,11 +415,11 @@ if __name__ == '__main__':
             headers['Referer'] = login_url
 
             print("Logging into Platform to get the session id")
-            r2 = requests.post(login_url, verify=False, data=data, headers=headers)
+            r2 = requests.post(login_url, verify=verify, data=data, headers=headers, timeout=DEFAULT_REQUEST_TIMEOUT)
             session_id = r2.cookies['sessionid']
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
-            exit(1)
+            sys.exit(1)
 
     with open(args.input_test_json) as f:
         in_json = f.read()
@@ -409,4 +436,4 @@ if __name__ == '__main__':
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
 
-    exit(0)
+    sys.exit(0)
