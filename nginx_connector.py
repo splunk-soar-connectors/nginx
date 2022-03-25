@@ -205,7 +205,7 @@ class NginxConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
-        self.save_progress(phantom.APP_SUCCESS)
+        self.save_progress("Successfully removed server")
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully removed server")
 
     def _handle_add_server(self, param, action_result):
@@ -228,7 +228,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['server_id'] = response['id']
 
-        self.save_progress(phantom.APP_SUCCESS)
+        self.save_progress("Successfully added server")
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully added server")
 
     def _patch_server(self, action_result, param, down):
@@ -299,7 +299,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['num_servers'] = len(action_result.get_data())
 
-        self.save_progress(phantom.APP_SUCCESS)
+        self.save_progress("Successfully listed server")
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_upstreams(self, param, action_result):
@@ -320,7 +320,7 @@ class NginxConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['num_upstreams'] = len(response)
 
-        self.save_progress(phantom.APP_SUCCESS)
+        self.save_progress("Successfully list upstreams")
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _set_base_url(self, param):
