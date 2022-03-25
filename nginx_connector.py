@@ -277,7 +277,7 @@ class NginxConnector(BaseConnector):
         # Add the response into the data section
         action_result.add_data(response)
 
-        self.save_progress(phantom.APP_SUCCESS)
+        self.save_progress("Successfully retrieved server info")
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully retrieved server info")
 
     def _handle_list_servers(self, param, action_result):
