@@ -2,7 +2,7 @@
 # NGINX
 
 Publisher: Splunk  
-Connector Version: 2\.0\.5  
+Connector Version: 2\.0\.6  
 Product Vendor: F5  
 Product Name: NGINX  
 Product Version Supported (regex): "\.\*"  
