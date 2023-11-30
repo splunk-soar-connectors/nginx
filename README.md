@@ -2,11 +2,11 @@
 # NGINX
 
 Publisher: Splunk  
-Connector Version: 2\.0\.6  
+Connector Version: 2.0.7  
 Product Vendor: F5  
 Product Name: NGINX  
-Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.1\.0  
+Product Version Supported (regex): ".\*"  
+Minimum Product Version: 5.1.0  
 
 This app integrates with an NGINX instance to manage upstreams and servers
 
@@ -15,8 +15,8 @@ The below configuration variables are required for this Connector to operate.  T
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
-**base\_url** |  optional  | string | Base URL of NGINX Instance \(Required for test connectivity\)
-**verify\_server\_cert** |  optional  | boolean | Verify server certificate
+**base_url** |  optional  | string | Base URL of NGINX Instance (Required for test connectivity)
+**verify_server_cert** |  optional  | boolean | Verify server certificate
 **username** |  required  | string | NGINX Username
 **password** |  required  | password | NGINX Password
 
@@ -52,21 +52,21 @@ Read only: **False**
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **url** |  optional  | URL of NGINX instance | string |  `url` 
-**upstream\_name** |  required  | Name of the upstream | string |  `nginx upstream name` 
-**server\_id** |  required  | ID of the server to remove | numeric |  `nginx server id` 
+**upstream_name** |  required  | Name of the upstream | string |  `nginx upstream name` 
+**server_id** |  required  | ID of the server to remove | numeric |  `nginx server id` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.server\_id | numeric |  `nginx server id` 
-action\_result\.parameter\.upstream\_name | string |  `nginx upstream name` 
-action\_result\.parameter\.url | string |  `url` 
-action\_result\.data | string | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.server_id | numeric |  `nginx server id`  |   9 
+action_result.parameter.upstream_name | string |  `nginx upstream name`  |   appservers 
+action_result.parameter.url | string |  `url`  |   http://10.1.17.75 
+action_result.data | string |  |  
+action_result.summary | string |  |  
+action_result.message | string |  |   Successfully removed server 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'add server'
 Add a server to an upstream
@@ -78,30 +78,30 @@ Read only: **False**
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **url** |  optional  | URL of NGINX instance | string |  `url` 
-**upstream\_name** |  required  | Name of the upstream | string |  `nginx upstream name` 
+**upstream_name** |  required  | Name of the upstream | string |  `nginx upstream name` 
 **ip** |  required  | IP of the server to add | string |  `ip` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.ip | string |  `ip` 
-action\_result\.parameter\.upstream\_name | string |  `nginx upstream name` 
-action\_result\.parameter\.url | string |  `url` 
-action\_result\.data\.\*\.backup | boolean | 
-action\_result\.data\.\*\.down | boolean | 
-action\_result\.data\.\*\.fail\_timeout | string | 
-action\_result\.data\.\*\.id | numeric |  `nginx server id` 
-action\_result\.data\.\*\.max\_conns | numeric | 
-action\_result\.data\.\*\.max\_fails | numeric | 
-action\_result\.data\.\*\.route | string | 
-action\_result\.data\.\*\.server | string | 
-action\_result\.data\.\*\.slow\_start | string | 
-action\_result\.data\.\*\.weight | numeric | 
-action\_result\.summary\.server\_id | numeric |  `nginx server id` 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.ip | string |  `ip`  |   10.1.17.79 
+action_result.parameter.upstream_name | string |  `nginx upstream name`  |   appservers 
+action_result.parameter.url | string |  `url`  |   http://10.1.17.75 
+action_result.data.\*.backup | boolean |  |   True  False 
+action_result.data.\*.down | boolean |  |   True  False 
+action_result.data.\*.fail_timeout | string |  |   10s 
+action_result.data.\*.id | numeric |  `nginx server id`  |   7 
+action_result.data.\*.max_conns | numeric |  |   0 
+action_result.data.\*.max_fails | numeric |  |   1 
+action_result.data.\*.route | string |  |  
+action_result.data.\*.server | string |  |   10.1.17.79:80 
+action_result.data.\*.slow_start | string |  |   0s 
+action_result.data.\*.weight | numeric |  |   1 
+action_result.summary.server_id | numeric |  `nginx server id`  |   7 
+action_result.message | string |  |   Successfully added server 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'disable server'
 Disable a server
@@ -113,30 +113,30 @@ Read only: **False**
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **url** |  optional  | URL of NGINX instance | string |  `url` 
-**upstream\_name** |  required  | Name of the upstream containing the server | string |  `nginx upstream name` 
-**server\_id** |  required  | ID of the server to disable | string |  `nginx server id` 
+**upstream_name** |  required  | Name of the upstream containing the server | string |  `nginx upstream name` 
+**server_id** |  required  | ID of the server to disable | string |  `nginx server id` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.server\_id | string |  `nginx server id` 
-action\_result\.parameter\.upstream\_name | string |  `nginx upstream name` 
-action\_result\.parameter\.url | string |  `url` 
-action\_result\.data\.\*\.backup | boolean | 
-action\_result\.data\.\*\.down | boolean | 
-action\_result\.data\.\*\.fail\_timeout | string | 
-action\_result\.data\.\*\.id | numeric |  `nginx server id` 
-action\_result\.data\.\*\.max\_conns | numeric | 
-action\_result\.data\.\*\.max\_fails | numeric | 
-action\_result\.data\.\*\.route | string | 
-action\_result\.data\.\*\.server | string | 
-action\_result\.data\.\*\.slow\_start | string | 
-action\_result\.data\.\*\.weight | numeric | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.server_id | string |  `nginx server id`  |   0 
+action_result.parameter.upstream_name | string |  `nginx upstream name`  |   appservers 
+action_result.parameter.url | string |  `url`  |   http://10.1.17.75 
+action_result.data.\*.backup | boolean |  |   True  False 
+action_result.data.\*.down | boolean |  |   True  False 
+action_result.data.\*.fail_timeout | string |  |   10s 
+action_result.data.\*.id | numeric |  `nginx server id`  |   0 
+action_result.data.\*.max_conns | numeric |  |   0 
+action_result.data.\*.max_fails | numeric |  |   1 
+action_result.data.\*.route | string |  |  
+action_result.data.\*.server | string |  |   10.1.17.76:80 
+action_result.data.\*.slow_start | string |  |   0s 
+action_result.data.\*.weight | numeric |  |   1 
+action_result.summary | string |  |  
+action_result.message | string |  |   Server successfully updated 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   0  1   
 
 ## action: 'enable server'
 Enable a server
@@ -148,30 +148,30 @@ Read only: **False**
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **url** |  optional  | URL of NGINX instance | string |  `url` 
-**upstream\_name** |  required  | Name of the upstream containing the server | string |  `nginx upstream name` 
-**server\_id** |  required  | ID of the server to enable | string |  `nginx server id` 
+**upstream_name** |  required  | Name of the upstream containing the server | string |  `nginx upstream name` 
+**server_id** |  required  | ID of the server to enable | string |  `nginx server id` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.server\_id | string |  `nginx server id` 
-action\_result\.parameter\.upstream\_name | string |  `nginx upstream name` 
-action\_result\.parameter\.url | string |  `url` 
-action\_result\.data\.\*\.backup | boolean | 
-action\_result\.data\.\*\.down | boolean | 
-action\_result\.data\.\*\.fail\_timeout | string | 
-action\_result\.data\.\*\.id | numeric |  `nginx server id` 
-action\_result\.data\.\*\.max\_conns | numeric | 
-action\_result\.data\.\*\.max\_fails | numeric | 
-action\_result\.data\.\*\.route | string | 
-action\_result\.data\.\*\.server | string | 
-action\_result\.data\.\*\.slow\_start | string | 
-action\_result\.data\.\*\.weight | numeric | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.server_id | string |  `nginx server id`  |   0 
+action_result.parameter.upstream_name | string |  `nginx upstream name`  |   appservers 
+action_result.parameter.url | string |  `url`  |   http://10.1.17.75 
+action_result.data.\*.backup | boolean |  |   True  False 
+action_result.data.\*.down | boolean |  |   True  False 
+action_result.data.\*.fail_timeout | string |  |   10s 
+action_result.data.\*.id | numeric |  `nginx server id`  |   0 
+action_result.data.\*.max_conns | numeric |  |   0 
+action_result.data.\*.max_fails | numeric |  |   1 
+action_result.data.\*.route | string |  |  
+action_result.data.\*.server | string |  |   10.1.17.76:80 
+action_result.data.\*.slow_start | string |  |   0s 
+action_result.data.\*.weight | numeric |  |   1 
+action_result.summary | string |  |  
+action_result.message | string |  |   Server successfully updated 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'describe server'
 Get information about an upstream server
@@ -183,30 +183,30 @@ Read only: **True**
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **url** |  optional  | URL of NGINX instance | string |  `url` 
-**upstream\_name** |  required  | Name of the upstream containing the server | string |  `nginx upstream name` 
-**server\_id** |  required  | ID of the server to describe | string |  `nginx server id` 
+**upstream_name** |  required  | Name of the upstream containing the server | string |  `nginx upstream name` 
+**server_id** |  required  | ID of the server to describe | string |  `nginx server id` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.server\_id | string |  `nginx server id` 
-action\_result\.parameter\.upstream\_name | string |  `nginx upstream name` 
-action\_result\.parameter\.url | string |  `url` 
-action\_result\.data\.\*\.backup | boolean | 
-action\_result\.data\.\*\.down | boolean | 
-action\_result\.data\.\*\.fail\_timeout | string | 
-action\_result\.data\.\*\.id | numeric |  `nginx server id` 
-action\_result\.data\.\*\.max\_conns | numeric | 
-action\_result\.data\.\*\.max\_fails | numeric | 
-action\_result\.data\.\*\.route | string | 
-action\_result\.data\.\*\.server | string | 
-action\_result\.data\.\*\.slow\_start | string | 
-action\_result\.data\.\*\.weight | numeric | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.server_id | string |  `nginx server id`  |   0 
+action_result.parameter.upstream_name | string |  `nginx upstream name`  |   appservers 
+action_result.parameter.url | string |  `url`  |   http://10.1.17.75 
+action_result.data.\*.backup | boolean |  |   True  False 
+action_result.data.\*.down | boolean |  |   True  False 
+action_result.data.\*.fail_timeout | string |  |   10s 
+action_result.data.\*.id | numeric |  `nginx server id`  |   0 
+action_result.data.\*.max_conns | numeric |  |   0 
+action_result.data.\*.max_fails | numeric |  |   1 
+action_result.data.\*.route | string |  |  
+action_result.data.\*.server | string |  |   10.1.17.76:80 
+action_result.data.\*.slow_start | string |  |   0s 
+action_result.data.\*.weight | numeric |  |   1 
+action_result.summary | string |  |  
+action_result.message | string |  |  
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'list servers'
 List servers under an upstream
@@ -218,45 +218,45 @@ Read only: **True**
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **url** |  optional  | URL of NGINX instance | string |  `url` 
-**upstream\_name** |  required  | Name of upstream | string |  `nginx upstream name` 
+**upstream_name** |  required  | Name of upstream | string |  `nginx upstream name` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.upstream\_name | string |  `nginx upstream name` 
-action\_result\.parameter\.url | string |  `url` 
-action\_result\.data\.\*\.active | numeric | 
-action\_result\.data\.\*\.backup | boolean | 
-action\_result\.data\.\*\.downstart | string | 
-action\_result\.data\.\*\.downtime | numeric | 
-action\_result\.data\.\*\.fails | numeric | 
-action\_result\.data\.\*\.header\_time | numeric | 
-action\_result\.data\.\*\.health\_checks\.checks | numeric | 
-action\_result\.data\.\*\.health\_checks\.fails | numeric | 
-action\_result\.data\.\*\.health\_checks\.last\_passed | boolean | 
-action\_result\.data\.\*\.health\_checks\.unhealthy | numeric | 
-action\_result\.data\.\*\.id | numeric |  `nginx server id` 
-action\_result\.data\.\*\.name | string |  `nginx server name` 
-action\_result\.data\.\*\.received | numeric | 
-action\_result\.data\.\*\.requests | numeric | 
-action\_result\.data\.\*\.response\_time | numeric | 
-action\_result\.data\.\*\.responses\.1xx | numeric | 
-action\_result\.data\.\*\.responses\.2xx | numeric | 
-action\_result\.data\.\*\.responses\.3xx | numeric | 
-action\_result\.data\.\*\.responses\.4xx | numeric | 
-action\_result\.data\.\*\.responses\.5xx | numeric | 
-action\_result\.data\.\*\.responses\.total | numeric | 
-action\_result\.data\.\*\.selected | string | 
-action\_result\.data\.\*\.sent | numeric | 
-action\_result\.data\.\*\.server | string | 
-action\_result\.data\.\*\.state | string | 
-action\_result\.data\.\*\.unavail | numeric | 
-action\_result\.data\.\*\.weight | numeric | 
-action\_result\.summary\.num\_servers | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.upstream_name | string |  `nginx upstream name`  |   appservers 
+action_result.parameter.url | string |  `url`  |   http://10.1.17.75 
+action_result.data.\*.active | numeric |  |   0 
+action_result.data.\*.backup | boolean |  |   True  False 
+action_result.data.\*.downstart | string |  |   2019-08-01T21:55:56.905Z 
+action_result.data.\*.downtime | numeric |  |   0 
+action_result.data.\*.fails | numeric |  |   0 
+action_result.data.\*.header_time | numeric |  |   1 
+action_result.data.\*.health_checks.checks | numeric |  |   103289 
+action_result.data.\*.health_checks.fails | numeric |  |   0 
+action_result.data.\*.health_checks.last_passed | boolean |  |   True  False 
+action_result.data.\*.health_checks.unhealthy | numeric |  |   0 
+action_result.data.\*.id | numeric |  `nginx server id`  |   0 
+action_result.data.\*.name | string |  `nginx server name`  |   10.1.17.76 
+action_result.data.\*.received | numeric |  |   1414 
+action_result.data.\*.requests | numeric |  |   2 
+action_result.data.\*.response_time | numeric |  |   1 
+action_result.data.\*.responses.1xx | numeric |  |   0 
+action_result.data.\*.responses.2xx | numeric |  |   0 
+action_result.data.\*.responses.3xx | numeric |  |   0 
+action_result.data.\*.responses.4xx | numeric |  |   2 
+action_result.data.\*.responses.5xx | numeric |  |   0 
+action_result.data.\*.responses.total | numeric |  |   2 
+action_result.data.\*.selected | string |  |   2019-07-18T18:27:54Z 
+action_result.data.\*.sent | numeric |  |   822 
+action_result.data.\*.server | string |  |   10.1.17.76:80 
+action_result.data.\*.state | string |  |   up 
+action_result.data.\*.unavail | numeric |  |   0 
+action_result.data.\*.weight | numeric |  |   1 
+action_result.summary.num_servers | numeric |  |   3 
+action_result.message | string |  |   Num servers: 3 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'list upstreams'
 List all configured upstreams
@@ -270,14 +270,14 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **url** |  optional  | URL of NGINX instance | string |  `url` 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.url | string |  `url` 
-action\_result\.data\.\*\.keepalive | numeric | 
-action\_result\.data\.\*\.zombies | numeric | 
-action\_result\.data\.\*\.zone | string |  `nginx upstream name` 
-action\_result\.summary\.num\_upstreams | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric | 
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.url | string |  `url`  |   http://10.1.17.75 
+action_result.data.\*.keepalive | numeric |  |   0 
+action_result.data.\*.zombies | numeric |  |   0 
+action_result.data.\*.zone | string |  `nginx upstream name`  |   appservers 
+action_result.summary.num_upstreams | numeric |  |   1 
+action_result.message | string |  |   Num upstreams: 1 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1 
