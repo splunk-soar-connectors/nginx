@@ -20,7 +20,7 @@
         "NGINX On-Prem - v1.15.10"
     ],
     "app_wizard_version": "1.0.0",
-    "python_version": "3",
+    "python_version": ["3.9", "3.13"],
     "configuration": {
         "base_url": {
             "description": "Base URL of NGINX Instance (Required for test connectivity)",
