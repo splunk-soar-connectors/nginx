@@ -1,6 +1,6 @@
 # File: nginx_connector.py
 #
-# Copyright (c) 2019-2025 Splunk Inc.
+# Copyright (c) 2019-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -167,7 +167,7 @@ class NginxConnector(BaseConnector):
 
         self.save_progress("Querying info about NGINX instance to test connectivity")
 
-        ret_val, response = self._make_rest_call("/nginx", action_result)
+        ret_val, _response = self._make_rest_call("/nginx", action_result)
 
         # Check for failure
         if phantom.is_fail(ret_val):
@@ -185,7 +185,7 @@ class NginxConnector(BaseConnector):
         server_id = param["server_id"]
 
         # make rest call
-        ret_val, response = self._make_rest_call(f"/http/upstreams/{upstream_name}/servers/{server_id}", action_result, method="delete")
+        ret_val, _response = self._make_rest_call(f"/http/upstreams/{upstream_name}/servers/{server_id}", action_result, method="delete")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
