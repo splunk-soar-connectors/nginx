@@ -1,9 +1,9 @@
 # NGINX
 
-Publisher: Splunk \
-Connector Version: 2.0.10 \
-Product Vendor: F5 \
-Product Name: NGINX \
+Publisher: Splunk <br>
+Connector Version: 2.0.10 <br>
+Product Vendor: F5 <br>
+Product Name: NGINX <br>
 Minimum Product Version: 5.1.0
 
 This app integrates with an NGINX instance to manage upstreams and servers
@@ -21,20 +21,20 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[remove server](#action-remove-server) - Remove a server from an upstream \
-[add server](#action-add-server) - Add a server to an upstream \
-[disable server](#action-disable-server) - Disable a server \
-[enable server](#action-enable-server) - Enable a server \
-[describe server](#action-describe-server) - Get information about an upstream server \
-[list servers](#action-list-servers) - List servers under an upstream \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[remove server](#action-remove-server) - Remove a server from an upstream <br>
+[add server](#action-add-server) - Add a server to an upstream <br>
+[disable server](#action-disable-server) - Disable a server <br>
+[enable server](#action-enable-server) - Enable a server <br>
+[describe server](#action-describe-server) - Get information about an upstream server <br>
+[list servers](#action-list-servers) - List servers under an upstream <br>
 [list upstreams](#action-list-upstreams) - List all configured upstreams
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -49,7 +49,7 @@ No Output
 
 Remove a server from an upstream
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -78,7 +78,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add a server to an upstream
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -116,7 +116,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Disable a server
 
-Type: **contain** \
+Type: **contain** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -154,7 +154,7 @@ summary.total_objects_successful | numeric | | 0 1 |
 
 Enable a server
 
-Type: **correct** \
+Type: **correct** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -192,7 +192,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get information about an upstream server
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -230,7 +230,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List servers under an upstream
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -283,7 +283,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List all configured upstreams
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -310,7 +310,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

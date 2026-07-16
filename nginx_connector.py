@@ -1,6 +1,6 @@
 # File: nginx_connector.py
 #
-# Copyright (c) 2019-2025 Splunk Inc.
+# Copyright (c) 2019-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 # Phantom App imports
 import json
 import sys
+from urllib.parse import quote
 
 import phantom.app as phantom
 
@@ -156,7 +157,7 @@ class NginxConnector(BaseConnector):
         url = self._base_url + endpoint
 
         try:
-            r = request_func(url, auth=self._auth, verify=config.get("verify_server_cert", False), **kwargs)
+            r = request_func(url, auth=self._auth, verify=config.get("verify_server_cert", True), **kwargs)
         except Exception as e:
             return RetVal(action_result.set_status(phantom.APP_ERROR, f"Error Connecting to server. Details: {e!s}"), resp_json)
 
@@ -167,7 +168,7 @@ class NginxConnector(BaseConnector):
 
         self.save_progress("Querying info about NGINX instance to test connectivity")
 
-        ret_val, response = self._make_rest_call("/nginx", action_result)
+        ret_val, _response = self._make_rest_call("/nginx", action_result)
 
         # Check for failure
         if phantom.is_fail(ret_val):
@@ -181,11 +182,13 @@ class NginxConnector(BaseConnector):
     def _handle_remove_server(self, param, action_result):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
-        upstream_name = param["upstream_name"]
-        server_id = param["server_id"]
+        upstream_name = self._validated_upstream_name(param["upstream_name"], action_result)
+        server_id = self._validated_server_id(param["server_id"], action_result)
+        if upstream_name is None or server_id is None:
+            return action_result.get_status()
 
         # make rest call
-        ret_val, response = self._make_rest_call(f"/http/upstreams/{upstream_name}/servers/{server_id}", action_result, method="delete")
+        ret_val, _response = self._make_rest_call(f"/http/upstreams/{upstream_name}/servers/{server_id}", action_result, method="delete")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -196,7 +199,9 @@ class NginxConnector(BaseConnector):
     def _handle_add_server(self, param, action_result):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
-        upstream_name = param["upstream_name"]
+        upstream_name = self._validated_upstream_name(param["upstream_name"], action_result)
+        if upstream_name is None:
+            return action_result.get_status()
         server_ip = param["ip"]
 
         # make rest call
@@ -217,8 +222,10 @@ class NginxConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully added server")
 
     def _patch_server(self, action_result, param, down):
-        upstream_name = param["upstream_name"]
-        server_id = param["server_id"]
+        upstream_name = self._validated_upstream_name(param["upstream_name"], action_result)
+        server_id = self._validated_server_id(param["server_id"], action_result)
+        if upstream_name is None or server_id is None:
+            return action_result.get_status()
 
         # make rest call
         ret_val, response = self._make_rest_call(
@@ -247,8 +254,10 @@ class NginxConnector(BaseConnector):
     def _handle_describe_server(self, param, action_result):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
-        upstream_name = param["upstream_name"]
-        server_id = param["server_id"]
+        upstream_name = self._validated_upstream_name(param["upstream_name"], action_result)
+        server_id = self._validated_server_id(param["server_id"], action_result)
+        if upstream_name is None or server_id is None:
+            return action_result.get_status()
 
         # make rest call
         ret_val, response = self._make_rest_call(f"/http/upstreams/{upstream_name}/servers/{server_id}", action_result)
@@ -265,7 +274,9 @@ class NginxConnector(BaseConnector):
     def _handle_list_servers(self, param, action_result):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
-        upstream_name = param["upstream_name"]
+        upstream_name = self._validated_upstream_name(param["upstream_name"], action_result)
+        if upstream_name is None:
+            return action_result.get_status()
 
         # make rest call
         ret_val, response = self._make_rest_call(f"/http/upstreams/{upstream_name}", action_result)
@@ -303,8 +314,22 @@ class NginxConnector(BaseConnector):
         self.save_progress("Successfully list upstreams")
         return action_result.set_status(phantom.APP_SUCCESS)
 
+    def _validated_upstream_name(self, value, action_result):
+        value = str(value)
+        if ".." in value or any(character in value for character in "/\\?#"):
+            action_result.set_status(phantom.APP_ERROR, "Upstream name contains invalid path characters")
+            return None
+        return quote(value, safe="")
+
+    def _validated_server_id(self, value, action_result):
+        value = str(value)
+        if not value.isdigit() or int(value) < 0:
+            action_result.set_status(phantom.APP_ERROR, "Server ID must be a non-negative integer")
+            return None
+        return value
+
     def _set_base_url(self, param):
-        base_url = param.get("url", self.get_config().get("base_url"))
+        base_url = self.get_config().get("base_url")
 
         if not base_url:
             return phantom.APP_ERROR
@@ -323,7 +348,7 @@ class NginxConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
         if phantom.is_fail(self._set_base_url(param)):
-            error_message = "Please set either a base_url in the asset configuration or a url in the action parameters"
+            error_message = "Please set a base_url in the asset configuration"
             return action_result.set_status(phantom.APP_ERROR, error_message)
 
         if action_id == "test_connectivity":
