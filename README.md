@@ -1,7 +1,7 @@
 # NGINX
 
 Publisher: Splunk <br>
-Connector Version: 2.0.10 <br>
+Connector Version: 2.0.11 <br>
 Product Vendor: F5 <br>
 Product Name: NGINX <br>
 Minimum Product Version: 5.1.0
