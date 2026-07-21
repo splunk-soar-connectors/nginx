@@ -237,7 +237,11 @@ class NginxConnector(BaseConnector):
 
         action_result.add_data(response)
 
-        return action_result.set_status(phantom.APP_SUCCESS, "Server successfully updated")
+        state = "disabled" if down else "enabled"
+        return action_result.set_status(
+            phantom.APP_SUCCESS,
+            f"Server {state} for new requests; established connections are not terminated",
+        )
 
     def _handle_disable_server(self, param, action_result):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")

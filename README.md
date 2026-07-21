@@ -24,8 +24,8 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 [test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
 [remove server](#action-remove-server) - Remove a server from an upstream <br>
 [add server](#action-add-server) - Add a server to an upstream <br>
-[disable server](#action-disable-server) - Disable a server <br>
-[enable server](#action-enable-server) - Enable a server <br>
+[disable server](#action-disable-server) - Disable a server for new requests without terminating established connections <br>
+[enable server](#action-enable-server) - Enable a server for new requests without terminating established connections <br>
 [describe server](#action-describe-server) - Get information about an upstream server <br>
 [list servers](#action-list-servers) - List servers under an upstream <br>
 [list upstreams](#action-list-upstreams) - List all configured upstreams
@@ -114,7 +114,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 ## action: 'disable server'
 
-Disable a server
+Disable a server for new requests without terminating established connections
 
 Type: **contain** <br>
 Read only: **False**
@@ -146,13 +146,13 @@ action_result.data.\*.server | string | | 10.1.17.76:80 |
 action_result.data.\*.slow_start | string | | 0s |
 action_result.data.\*.weight | numeric | | 1 |
 action_result.summary | string | | |
-action_result.message | string | | Server successfully updated |
+action_result.message | string | | Server disabled for new requests; established connections are not terminated |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 0 1 |
 
 ## action: 'enable server'
 
-Enable a server
+Enable a server for new requests without terminating established connections
 
 Type: **correct** <br>
 Read only: **False**
@@ -184,7 +184,7 @@ action_result.data.\*.server | string | | 10.1.17.76:80 |
 action_result.data.\*.slow_start | string | | 0s |
 action_result.data.\*.weight | numeric | | 1 |
 action_result.summary | string | | |
-action_result.message | string | | Server successfully updated |
+action_result.message | string | | Server enabled for new requests; established connections are not terminated |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
