@@ -1,3 +1,1 @@
 **Unreleased**
-
-* Clarified that enabling or disabling a server affects new requests but does not terminate established connections.
