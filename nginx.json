@@ -362,7 +362,7 @@
         {
             "action": "disable server",
             "identifier": "disable_server",
-            "description": "Disable a server",
+            "description": "Disable a server for new requests without terminating established connections",
             "type": "contain",
             "read_only": false,
             "undo": "enable server",
@@ -522,7 +522,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Server successfully updated"
+                        "Server disabled for new requests; established connections are not terminated"
                     ]
                 },
                 {
@@ -549,7 +549,7 @@
         {
             "action": "enable server",
             "identifier": "enable_server",
-            "description": "Enable a server",
+            "description": "Enable a server for new requests without terminating established connections",
             "type": "correct",
             "read_only": false,
             "undo": "disable server",
@@ -709,7 +709,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Server successfully updated"
+                        "Server enabled for new requests; established connections are not terminated"
                     ]
                 },
                 {
