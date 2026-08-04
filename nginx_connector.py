@@ -156,6 +156,7 @@ class NginxConnector(BaseConnector):
         url = self._base_url + endpoint
 
         try:
+            kwargs.setdefault("timeout", DEFAULT_REQUEST_TIMEOUT)
             r = request_func(url, auth=self._auth, verify=config.get("verify_server_cert", True), **kwargs)
         except Exception as e:
             return RetVal(action_result.set_status(phantom.APP_ERROR, f"Error Connecting to server. Details: {e!s}"), resp_json)
