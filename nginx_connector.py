@@ -101,9 +101,7 @@ class NginxConnector(BaseConnector):
         if 200 <= r.status_code < 399:
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
-        resp_json = r.json()
-
-        if "error" in resp_json:
+        if isinstance(resp_json, dict) and isinstance(resp_json.get("error"), dict):
             error = resp_json["error"].get("text", "unknown error")
         else:
             error = r.text.replace("{", "{{").replace("}", "}}")
