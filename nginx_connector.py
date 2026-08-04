@@ -30,6 +30,7 @@ from phantom.base_connector import BaseConnector
 
 
 DEFAULT_REQUEST_TIMEOUT = 30  # in seconds
+DISABLED_SERVERS_STATE_KEY = "disabled_servers"
 
 
 class RetVal(tuple):
@@ -47,7 +48,7 @@ class NginxConnector(BaseConnector):
         self._base_url = None
 
     def initialize(self):
-        self._state = self.load_state()
+        self._state = self.load_state() or {}
 
         # get the asset config
         config = self.get_config()
@@ -100,9 +101,7 @@ class NginxConnector(BaseConnector):
         if 200 <= r.status_code < 399:
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
-        resp_json = r.json()
-
-        if "error" in resp_json:
+        if isinstance(resp_json, dict) and isinstance(resp_json.get("error"), dict):
             error = resp_json["error"].get("text", "unknown error")
         else:
             error = r.text.replace("{", "{{").replace("}", "}}")
@@ -157,6 +156,7 @@ class NginxConnector(BaseConnector):
         url = self._base_url + endpoint
 
         try:
+            kwargs.setdefault("timeout", DEFAULT_REQUEST_TIMEOUT)
             r = request_func(url, auth=self._auth, verify=config.get("verify_server_cert", True), **kwargs)
         except Exception as e:
             return RetVal(action_result.set_status(phantom.APP_ERROR, f"Error Connecting to server. Details: {e!s}"), resp_json)
@@ -221,11 +221,46 @@ class NginxConnector(BaseConnector):
         self.save_progress("Successfully added server")
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully added server")
 
-    def _patch_server(self, action_result, param, down):
+    def _server_identifiers(self, param, action_result):
         upstream_name = self._validated_upstream_name(param["upstream_name"], action_result)
         server_id = self._validated_server_id(param["server_id"], action_result)
         if upstream_name is None or server_id is None:
-            return action_result.get_status()
+            return None
+
+        return upstream_name, server_id
+
+    def _get_server(self, action_result, upstream_name, server_id):
+        ret_val, response = self._make_rest_call(f"/http/upstreams/{upstream_name}/servers/{server_id}", action_result)
+        if phantom.is_fail(ret_val):
+            return ret_val, None
+
+        if not isinstance(response, dict) or not isinstance(response.get("down"), bool):
+            return action_result.set_status(phantom.APP_ERROR, "NGINX returned an invalid server state response"), None
+
+        return ret_val, response
+
+    def _get_installation_id(self, action_result):
+        try:
+            installation_id = self.get_product_installation_id()
+        except Exception as e:
+            action_result.set_status(phantom.APP_ERROR, f"Unable to identify this SOAR installation: {e!s}")
+            return None
+
+        if not installation_id:
+            action_result.set_status(phantom.APP_ERROR, "Unable to identify this SOAR installation")
+            return None
+
+        return str(installation_id)
+
+    def _get_disabled_servers(self):
+        disabled_servers = self._state.get(DISABLED_SERVERS_STATE_KEY)
+        if not isinstance(disabled_servers, dict):
+            disabled_servers = {}
+            self._state[DISABLED_SERVERS_STATE_KEY] = disabled_servers
+
+        return disabled_servers
+
+    def _patch_server(self, action_result, upstream_name, server_id, down):
 
         # make rest call
         ret_val, response = self._make_rest_call(
@@ -247,13 +282,62 @@ class NginxConnector(BaseConnector):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         self.save_progress("")
-        return self._patch_server(action_result, param, True)
+        identifiers = self._server_identifiers(param, action_result)
+        if identifiers is None:
+            return action_result.get_status()
+        upstream_name, server_id = identifiers
+
+        installation_id = self._get_installation_id(action_result)
+        if installation_id is None:
+            return action_result.get_status()
+
+        ret_val, response = self._get_server(action_result, upstream_name, server_id)
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        if response["down"]:
+            action_result.add_data(response)
+            return action_result.set_status(phantom.APP_SUCCESS, "Server is already disabled; no ownership recorded")
+
+        ret_val = self._patch_server(action_result, upstream_name, server_id, True)
+        if phantom.is_success(ret_val):
+            key = f"{upstream_name}/{server_id}"
+            self._get_disabled_servers()[key] = installation_id
+        return ret_val
 
     def _handle_enable_server(self, param, action_result):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         self.save_progress("")
-        return self._patch_server(action_result, param, False)
+        identifiers = self._server_identifiers(param, action_result)
+        if identifiers is None:
+            return action_result.get_status()
+        upstream_name, server_id = identifiers
+
+        ret_val, response = self._get_server(action_result, upstream_name, server_id)
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        key = f"{upstream_name}/{server_id}"
+        disabled_servers = self._get_disabled_servers()
+        if not response["down"]:
+            disabled_servers.pop(key, None)
+            action_result.add_data(response)
+            return action_result.set_status(phantom.APP_SUCCESS, "Server is already enabled; no change made")
+
+        installation_id = self._get_installation_id(action_result)
+        if installation_id is None:
+            return action_result.get_status()
+        if disabled_servers.get(key) != installation_id:
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "Refusing to enable a server that this SOAR installation did not disable",
+            )
+
+        ret_val = self._patch_server(action_result, upstream_name, server_id, False)
+        if phantom.is_success(ret_val):
+            disabled_servers.pop(key, None)
+        return ret_val
 
     def _handle_describe_server(self, param, action_result):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
